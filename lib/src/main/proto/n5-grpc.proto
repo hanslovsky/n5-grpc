@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+service N5GRPCService {
+  rpc ReadBlock(BlockMeta) returns (Block);
+  rpc Exists(Path) returns (BooleanFlag);
+  rpc List(Path) returns (Paths);
+  rpc ListAttributes(Path) returns (JsonString);
+}
+
+message Path {
+  string pathName = 1;
+}
+
+message Paths {
+  repeated Path paths = 1;
+}
+
+message JsonString {
+  string jsonString = 1;
+}
+
+message BooleanFlag {
+  bool flag = 1;
+}
+
+message BlockMeta {
+  Path path = 1;
+  repeated uint64 gridPosition = 2 [packed=true];
+}
+
+message Block {
+  bytes data = 1;
+  // TODO should Block hold its position and size? Could be used for confirmation purposes
+}
