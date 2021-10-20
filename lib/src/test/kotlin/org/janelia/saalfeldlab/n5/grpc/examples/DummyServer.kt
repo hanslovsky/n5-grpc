@@ -10,7 +10,9 @@ import io.grpc.ServerBuilder
 import io.grpc.stub.StreamObserver
 import org.janelia.saalfeldlab.n5.DataType
 import org.janelia.saalfeldlab.n5.DatasetAttributes
-import org.janelia.saalfeldlab.n5.grpc.N5GRPCReader
+import org.janelia.saalfeldlab.n5.RawCompression
+import org.janelia.saalfeldlab.n5.grpc.N5GrpcReader
+import org.janelia.saalfeldlab.n5.grpc.asMessage
 import java.nio.ByteBuffer
 import java.util.concurrent.TimeUnit
 
@@ -65,7 +67,7 @@ class DummyServer(
                 responseObserver.onCompleted()
             }
 
-            override fun listAttributes(request: N5Grpc.Path, responseObserver: StreamObserver<N5Grpc.JsonString>) {
+            override fun getAttributes(request: N5Grpc.Path, responseObserver: StreamObserver<N5Grpc.JsonString>) {
                 val jsonString = if (request.pathName == datasetPath)
                     mapOf(
                         "dimensions" to dimensions,
@@ -93,6 +95,20 @@ class DummyServer(
                 responseObserver.onNext(N5Grpc.Paths.newBuilder().addAllPaths(contentsPaths).build())
                 responseObserver.onCompleted()
             }
+
+            override fun datasetExists(request: N5Grpc.Path?, responseObserver: StreamObserver<N5Grpc.BooleanFlag>) {
+                responseObserver.onNext(N5Grpc.BooleanFlag.newBuilder().setFlag(datasetPath == request?.pathName).build())
+                responseObserver.onCompleted()
+            }
+
+            override fun getDatasetAttributes(
+                request: N5Grpc.Path?,
+                responseObserver: StreamObserver<N5Grpc.DatasetAttributes>
+            ) {
+                responseObserver.onNext(DatasetAttributes(dimensions, blockSize, dataType, RawCompression()).asMessage())
+                responseObserver.onCompleted()
+            }
+
         }
         this.server = serverBuilder.addService(service).build()
     }
@@ -124,7 +140,7 @@ class DummyServer(
         fun main(args: Array<String>) {
             val server = DummyServer(9090, dimensions = longArrayOf(5, 6), dataType = DataType.FLOAT64)
             server.start()
-            val reader = N5GRPCReader("localhost", 9090)
+            val reader = N5GrpcReader("localhost", 9090)
             println(reader.exists("def"))
             println(reader.datasetExists("def"))
             println(reader.list("def").toList())
@@ -134,7 +150,7 @@ class DummyServer(
             println(reader.list("ab").toList())
             println(reader.list("abc").toList())
             println(reader.list("abcd").toList())
-            val attributes = reader.getDatasetAttributes("abc")
+            val attributes = reader.getDatasetAttributes("abc")!!
             val data = reader.readBlock("abc", attributes, 0, 0, 0)
             println((data.data as DoubleArray).joinToString(prefix = "[", postfix = "]"))
         }

@@ -42,6 +42,9 @@ dependencies {
     // need netty server for tests/examples
     testImplementation("io.grpc:grpc-netty:1.41.0")
 
+    // use n5-hdf5 for example
+    testImplementation("org.janelia.saalfeldlab:n5-hdf5:1.4.1")
+
     // Use the Kotlin test library.
     // testImplementation("org.jetbrains.kotlin:kotlin-test")
 

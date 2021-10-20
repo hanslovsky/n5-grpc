@@ -3,8 +3,10 @@ syntax = "proto3";
 service N5GRPCService {
   rpc ReadBlock(BlockMeta) returns (Block);
   rpc Exists(Path) returns (BooleanFlag);
+  rpc DatasetExists(Path) returns (BooleanFlag);
   rpc List(Path) returns (Paths);
-  rpc ListAttributes(Path) returns (JsonString);
+  rpc GetAttributes(Path) returns (JsonString);
+  rpc GetDatasetAttributes(Path) returns (DatasetAttributes);
 }
 
 message Path {
@@ -26,9 +28,18 @@ message BooleanFlag {
 message BlockMeta {
   Path path = 1;
   repeated uint64 gridPosition = 2 [packed=true];
+  DatasetAttributes datasetAttributes = 3;
 }
 
 message Block {
   bytes data = 1;
   // TODO should Block hold its position and size? Could be used for confirmation purposes
+}
+
+message DatasetAttributes {
+  repeated uint64 dimensions = 1 [packed=true];
+  repeated uint32 blockSize = 2 [packed=true];
+  string dataType = 3;
+  string compressionJsonString = 4;
+  string compressionType = 5;
 }
