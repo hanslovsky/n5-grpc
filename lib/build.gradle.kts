@@ -33,26 +33,9 @@ dependencies {
 
     // protobuf
     implementation("io.grpc:grpc-kotlin-stub:1.2.0")
-    implementation("io.grpc:grpc-protobuf:1.41.0")
     implementation("com.google.protobuf:protobuf-kotlin:3.19.0-rc-1")
-    implementation("io.grpc:grpc-stub:1.41.0")
-
-    // need netty server for tests/examples
-    testImplementation("io.grpc:grpc-netty:1.41.0")
-
-    // use n5-hdf5 for example
-    testImplementation("org.janelia.saalfeldlab:n5-hdf5:1.4.1")
-
-    // imglib2 for function server
-    testImplementation("net.imglib2:imglib2:5.12.0")
-    testImplementation("org.janelia.saalfeldlab:n5-imglib2:4.1.1")
-
-    // Use the Kotlin test library.
-    // testImplementation("org.jetbrains.kotlin:kotlin-test")
-
-    // Use the Kotlin JUnit integration.
-    // testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-
+    api("io.grpc:grpc-protobuf:1.41.0")
+    api("io.grpc:grpc-stub:1.41.0")
 }
 
 // set up protobuf plugin

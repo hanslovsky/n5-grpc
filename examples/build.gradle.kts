@@ -17,13 +17,8 @@ dependencies {
     // N5
     implementation("org.janelia.saalfeldlab:n5:2.5.1")
 
-    // protobuf
-    implementation("io.grpc:grpc-kotlin-stub:1.2.0")
-    implementation("io.grpc:grpc-protobuf:1.41.0")
-    implementation("com.google.protobuf:protobuf-kotlin:3.19.0-rc-1")
-    implementation("io.grpc:grpc-stub:1.41.0")
-
     implementation(project(":lib"))
+
     // need netty server for tests/examples
     implementation("io.grpc:grpc-netty:1.41.0")
 
