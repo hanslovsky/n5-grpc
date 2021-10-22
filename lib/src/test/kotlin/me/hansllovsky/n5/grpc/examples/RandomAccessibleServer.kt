@@ -1,4 +1,4 @@
-package org.janelia.saalfeldlab.n5.grpc.examples
+package me.hansllovsky.n5.grpc.examples
 
 import com.google.protobuf.UnsafeByteOperations
 import io.grpc.Server
@@ -10,9 +10,9 @@ import net.imglib2.type.NativeType
 import net.imglib2.type.numeric.integer.UnsignedByteType
 import net.imglib2.view.Views
 import org.janelia.saalfeldlab.n5.*
-import org.janelia.saalfeldlab.n5.grpc.N5GrpcReader
-import org.janelia.saalfeldlab.n5.grpc.asMessage
-import org.janelia.saalfeldlab.n5.grpc.defaultGson
+import me.hansllovsky.n5.grpc.N5GrpcReader
+import me.hansllovsky.n5.grpc.asMessage
+import me.hansllovsky.n5.grpc.defaultGson
 import org.janelia.saalfeldlab.n5.imglib2.N5Utils
 import java.io.ByteArrayOutputStream
 import java.lang.reflect.Type
