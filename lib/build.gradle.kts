@@ -45,6 +45,10 @@ dependencies {
     // use n5-hdf5 for example
     testImplementation("org.janelia.saalfeldlab:n5-hdf5:1.4.1")
 
+    // imglib2 for function server
+    testImplementation("net.imglib2:imglib2:5.12.0")
+    testImplementation("org.janelia.saalfeldlab:n5-imglib2:4.1.1")
+
     // Use the Kotlin test library.
     // testImplementation("org.jetbrains.kotlin:kotlin-test")
 
