@@ -1,4 +1,4 @@
-// These import is necessary for the protoc task below
+// These imports are necessary for the protoc task below
 import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.id
 import com.google.protobuf.gradle.plugins
@@ -6,9 +6,7 @@ import com.google.protobuf.gradle.protobuf
 import com.google.protobuf.gradle.protoc
 
 plugins {
-    // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
-    id("org.jetbrains.kotlin.jvm") version "1.5.0"
-
+    id("org.jetbrains.kotlin.jvm")
     // Apply the java-library plugin for API and implementation separation.
     `java-library`
 
