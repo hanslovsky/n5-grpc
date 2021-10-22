@@ -9,10 +9,10 @@ import io.grpc.Server
 import io.grpc.ServerBuilder
 import io.grpc.stub.StreamObserver
 import org.janelia.saalfeldlab.n5.*
-import me.hansllovsky.n5.grpc.N5GrpcReader
-import me.hansllovsky.n5.grpc.asDatasetAttributes
-import me.hansllovsky.n5.grpc.asMessage
-import me.hansllovsky.n5.grpc.defaultGson
+import me.hanslovsky.n5.grpc.N5GrpcReader
+import me.hanslovsky.n5.grpc.asDatasetAttributes
+import me.hanslovsky.n5.grpc.asMessage
+import me.hanslovsky.n5.grpc.defaultGson
 import org.janelia.saalfeldlab.n5.hdf5.N5HDF5Reader
 import java.io.ByteArrayOutputStream
 import java.util.concurrent.TimeUnit

@@ -10,9 +10,9 @@ import net.imglib2.type.NativeType
 import net.imglib2.type.numeric.integer.UnsignedByteType
 import net.imglib2.view.Views
 import org.janelia.saalfeldlab.n5.*
-import me.hansllovsky.n5.grpc.N5GrpcReader
-import me.hansllovsky.n5.grpc.asMessage
-import me.hansllovsky.n5.grpc.defaultGson
+import me.hanslovsky.n5.grpc.N5GrpcReader
+import me.hanslovsky.n5.grpc.asMessage
+import me.hanslovsky.n5.grpc.defaultGson
 import org.janelia.saalfeldlab.n5.imglib2.N5Utils
 import java.io.ByteArrayOutputStream
 import java.lang.reflect.Type

@@ -11,8 +11,8 @@ import io.grpc.stub.StreamObserver
 import org.janelia.saalfeldlab.n5.DataType
 import org.janelia.saalfeldlab.n5.DatasetAttributes
 import org.janelia.saalfeldlab.n5.RawCompression
-import me.hansllovsky.n5.grpc.N5GrpcReader
-import me.hansllovsky.n5.grpc.asMessage
+import me.hanslovsky.n5.grpc.N5GrpcReader
+import me.hanslovsky.n5.grpc.asMessage
 import java.nio.ByteBuffer
 import java.util.concurrent.TimeUnit
 

@@ -1,4 +1,4 @@
-package me.hansllovsky.n5.grpc
+package me.hanslovsky.n5.grpc
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
