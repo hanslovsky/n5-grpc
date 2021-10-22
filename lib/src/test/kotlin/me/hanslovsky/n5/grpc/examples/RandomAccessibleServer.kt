@@ -1,4 +1,4 @@
-package me.hansllovsky.n5.grpc.examples
+package me.hanslovsky.n5.grpc.examples
 
 import com.google.protobuf.UnsafeByteOperations
 import io.grpc.Server
