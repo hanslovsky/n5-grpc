@@ -34,14 +34,8 @@ dependencies {
     implementation("net.imglib2:imglib2:5.12.0")
     implementation("org.janelia.saalfeldlab:n5-imglib2:4.1.1")
 
-    // Use the Kotlin test library.
-    // testImplementation("org.jetbrains.kotlin:kotlin-test")
-
-    // Use the Kotlin JUnit integration.
-    // testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-
 }
 
 application {
-    mainClass.set("me.hanslovsky.n5.grpc.examples.RandomAccessibleServerKt")
+    mainClass.set(project.properties["mainClass"]?.toString() ?: "me.hanslovsky.n5.grpc.examples.RandomAccessibleServerKt")
 }
