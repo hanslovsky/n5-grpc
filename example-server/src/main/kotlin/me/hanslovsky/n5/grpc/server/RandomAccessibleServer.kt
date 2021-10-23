@@ -18,9 +18,11 @@ import net.imglib2.view.Views
 import org.janelia.saalfeldlab.n5.*
 import org.janelia.saalfeldlab.n5.imglib2.N5Utils
 import picocli.CommandLine
+import sun.misc.Signal
 import java.io.ByteArrayOutputStream
 import java.lang.reflect.Type
 import java.util.concurrent.Callable
+import java.util.concurrent.CountDownLatch
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicInteger
@@ -216,10 +218,6 @@ class RandomAccessibleServer(serverBuilder: ServerBuilder<*>, vararg datasets: P
             )
             server.start()
 
-            val syncObject = Object()
-            Thread { Thread.sleep(1000000); synchronized(syncObject) { syncObject.notify() } }.also { it.isDaemon = true }.start()
-
-            println("lolinger")
             val reader = N5GrpcReader("localhost", 9090)
             println(reader.exists("my/no"))
             println(reader.exists("my/group"))
@@ -227,9 +225,7 @@ class RandomAccessibleServer(serverBuilder: ServerBuilder<*>, vararg datasets: P
             println(reader.datasetExists("my/group"))
             println(reader.datasetExists("my/dataset"))
 
-            synchronized(syncObject) {
-                syncObject.wait()
-            }
+            SigintLog.waitBlocking()
             return 0
         }
     }
@@ -254,4 +250,33 @@ private val Localizable.prod get(): Long {
     for (d in 0 until numDimensions())
         prod *= getLongPosition(d)
     return prod
+}
+
+class SigintLog(val maxTimeSeconds: Int = 5) {
+
+    var lastSigintLog: Long = 0L
+    val maxTimeMillis = 1000 * maxTimeSeconds
+    val countDownLatch = CountDownLatch(1)
+
+    fun waitBlocking() {
+        val oldHandler = Signal.handle(Signal("INT")) { handle(it) }
+        countDownLatch.await()
+        Signal.handle(Signal("INT"), oldHandler)
+    }
+
+    private fun handle(signal: Signal) {
+        val time = System.currentTimeMillis()
+        if (time - lastSigintLog < maxTimeMillis) {
+            countDownLatch.countDown()
+            println("\b\b")
+        }
+        else {
+            println("\b\bReceived SIGINT signal (ctrl-c). Repeat ctrl-c within $maxTimeSeconds seconds to shutdown the server.")
+            lastSigintLog = time
+        }
+    }
+
+    companion object {
+        fun waitBlocking() = SigintLog().waitBlocking()
+    }
 }
