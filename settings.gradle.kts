@@ -8,4 +8,4 @@
  */
 
 rootProject.name = "n5-grpc"
-include("lib", "examples")
+include("lib", "example-server", "n5-grpc-bdv")

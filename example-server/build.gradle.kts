@@ -29,8 +29,13 @@ dependencies {
     implementation("net.imglib2:imglib2:5.12.0")
     implementation("org.janelia.saalfeldlab:n5-imglib2:4.1.1")
 
+    // CLI parser
+    implementation("info.picocli:picocli:4.6.1")
+
+    // bdv
+    implementation("sc.fiji:bigdataviewer-vistools:1.0.0-beta-29")
 }
 
 application {
-    mainClass.set(project.properties["mainClass"]?.toString() ?: "me.hanslovsky.n5.grpc.examples.RandomAccessibleServerKt")
+    mainClass.set(project.properties["mainClass"]?.toString() ?: "me.hanslovsky.n5.grpc.server.RandomAccessibleServer")
 }

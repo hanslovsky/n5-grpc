@@ -1,4 +1,4 @@
-package me.hanslovsky.n5.grpc.examples
+package me.hanslovsky.n5.grpc.server
 
 import N5GRPCServiceGrpc
 import N5Grpc

@@ -1,23 +1,31 @@
-package me.hanslovsky.n5.grpc.examples
+package me.hanslovsky.n5.grpc.server
 
+import N5GRPCServiceGrpc
+import N5Grpc
 import com.google.protobuf.UnsafeByteOperations
 import io.grpc.Server
 import io.grpc.ServerBuilder
 import io.grpc.stub.StreamObserver
-import net.imglib2.RandomAccessible
-import net.imglib2.position.FunctionRandomAccessible
-import net.imglib2.type.NativeType
-import net.imglib2.type.numeric.integer.UnsignedByteType
-import net.imglib2.view.Views
-import org.janelia.saalfeldlab.n5.*
 import me.hanslovsky.n5.grpc.N5GrpcReader
 import me.hanslovsky.n5.grpc.asMessage
 import me.hanslovsky.n5.grpc.defaultGson
+import net.imglib2.Localizable
+import net.imglib2.RandomAccessible
+import net.imglib2.position.FunctionRandomAccessible
+import net.imglib2.type.NativeType
+import net.imglib2.type.numeric.integer.UnsignedLongType
+import net.imglib2.view.Views
+import org.janelia.saalfeldlab.n5.*
 import org.janelia.saalfeldlab.n5.imglib2.N5Utils
+import picocli.CommandLine
 import java.io.ByteArrayOutputStream
 import java.lang.reflect.Type
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.min
+import kotlin.system.exitProcess
 
 class Element(vararg children: Pair<String, Element>) {
 
@@ -44,7 +52,7 @@ class Element(vararg children: Pair<String, Element>) {
 
     class Dataset<T: NativeType<T>>(val ra: RandomAccessible<T>, val attributes: DatasetAttributes) {
         fun minFor(vararg gridPosition: Long) = LongArray(attributes.numDimensions) { gridPosition[it] * attributes.blockSize[it] }
-        fun maxFor(vararg gridPosition: Long) = minFor(*gridPosition).let { m -> LongArray(m.size) { min(m[it] + attributes.blockSize[it], attributes.dimensions[it] - 1) } }
+        fun maxFor(vararg gridPosition: Long) = minFor(*gridPosition).let { m -> LongArray(m.size) { min(m[it] + attributes.blockSize[it], attributes.dimensions[it]) - 1 } }
     }
 }
 
@@ -75,12 +83,11 @@ class N5CallbackWriter(private val callback: (String?, DataBlock<*>?) -> Unit) :
     override fun <T : Any?> writeBlock(pathName: String?, datasetAttributes: DatasetAttributes?, dataBlock: DataBlock<T>?) = callback(pathName, dataBlock)
 }
 
-class RandomAccessibleServer(serverBuilder: ServerBuilder<*>,
-                             val port: Int,
-                             vararg datasets: Pair<String, Element.Dataset<*>?>) {
+class RandomAccessibleServer(serverBuilder: ServerBuilder<*>, vararg datasets: Pair<String, Element.Dataset<*>?>) {
 
-    constructor(port: Int, vararg datasets: Pair<String, Element.Dataset<*>?>) : this(ServerBuilder.forPort(port), port, *datasets)
+    constructor(port: Int, vararg datasets: Pair<String, Element.Dataset<*>?>) : this(ServerBuilder.forPort(port), *datasets)
 
+    val port get() = server.port
     private val server: Server
     private val root = Element().also { datasets.forEach { (p, d) -> it.createAt(p, d) } }
 
@@ -111,7 +118,6 @@ class RandomAccessibleServer(serverBuilder: ServerBuilder<*>,
                             dataset.attributes,
                             blocks[0]
                         )
-                        it.toByteArray()
                         UnsafeByteOperations.unsafeWrap(it.currentBufUnsafe, 0, it.currentCount)
                     }
                     data
@@ -153,7 +159,7 @@ class RandomAccessibleServer(serverBuilder: ServerBuilder<*>,
                 request: N5Grpc.Path,
                 responseObserver: StreamObserver<N5Grpc.DatasetAttributes>
             ) {
-                responseObserver.onNext(root.forPath(request.pathName)?.dataset?.attributes?.asMessage())
+                responseObserver.onNext(root.forPath(request.pathName)?.dataset?.attributes?.asMessage(defaultGson))
                 responseObserver.onCompleted()
             }
 
@@ -187,38 +193,65 @@ class RandomAccessibleServer(serverBuilder: ServerBuilder<*>,
         val currentBufUnsafe get() = super.buf
         val currentCount get() = super.count
     }
-}
 
-fun main() {
-    val server = RandomAccessibleServer(
-        9090,
-        "my/dataset" to Element.Dataset(
-            FunctionRandomAccessible(1, { l, t -> t.setInteger(l.getLongPosition(0)) }) { UnsignedByteType() },
-            DatasetAttributes(longArrayOf(23), intArrayOf(5), DataType.UINT8, Lz4Compression())),
-        "my/group" to null
-    )
-    server.start()
+    @CommandLine.Command(name="VisualizeWithBdv", showDefaultValues = true)
+    class Main: Callable<Int> {
+        @CommandLine.Option(names = ["--port", "-p"], required = false, defaultValue = "9090")
+        var port: Int = 9090
 
-    val reader = N5GrpcReader("localhost", 9090)
-    println(reader.exists("my/no"))
-    println(reader.exists("my/group"))
-    println(reader.exists("my/dataset"))
-    println(reader.datasetExists("my/group"))
-    println(reader.datasetExists("my/dataset"))
+        @CommandLine.Option(names = ["--num-threads", "-n"], required = false, defaultValue = "1")
+        var numThreads = 1
 
-    val attributes = reader.getDatasetAttributes("my/dataset")!!
-    for (o in 0 until 5) {
-        val data = reader.readBlock("my/dataset", attributes, o.toLong())
-        println((data.data as ByteArray).joinToString(prefix = "[", postfix = "]"))
+        @CommandLine.Option(names = ["--help", "-h"], required = false, usageHelp = true)
+        var help = false
+
+        override fun call(): Int {
+            val threadId = AtomicInteger()
+            val server = RandomAccessibleServer(
+                ServerBuilder.forPort(port).executor(Executors.newFixedThreadPool(numThreads) { Thread(it).also { it.isDaemon = true; it.name = "n5-grpc-server-${threadId.getAndIncrement()}" } }),
+                "my/dataset" to Element.Dataset(
+                    FunctionRandomAccessible(3, { l, t -> t.setInteger(l.sum) }) { UnsignedLongType() },
+                    DatasetAttributes(longArrayOf(1230, 1340, 1450), intArrayOf(64, 64, 64), DataType.UINT64, RawCompression())),
+                "my/group" to null
+            )
+            server.start()
+
+            val syncObject = Object()
+            Thread { Thread.sleep(1000000); synchronized(syncObject) { syncObject.notify() } }.also { it.isDaemon = true }.start()
+
+            println("lolinger")
+            val reader = N5GrpcReader("localhost", 9090)
+            println(reader.exists("my/no"))
+            println(reader.exists("my/group"))
+            println(reader.exists("my/dataset"))
+            println(reader.datasetExists("my/group"))
+            println(reader.datasetExists("my/dataset"))
+
+            synchronized(syncObject) {
+                syncObject.wait()
+            }
+            return 0
+        }
     }
 
-//    val root = Element()
-//    root.addChild("blub", Element("bleb" to Element("blub" to Element())))
-//    println(root.forPath("blub")?.listChildren())
-//    println(root.forPath("blub/bleb")?.listChildren())
-//    println(root.forPath("blub/bleb/blub")?.listChildren())
-//
-//    root.createAt("oke", "oke", "oke")
-//    println(root.forPath("oke", "oke")?.listChildren())
-//    println(root.forPath("oke", "oke", "oke")?.listChildren())
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            exitProcess(CommandLine(Main()).execute(*args))
+        }
+    }
+}
+
+private val Localizable.sum get(): Long {
+    var sum = 0L
+    for (d in 0 until numDimensions())
+        sum += getLongPosition(d)
+    return sum
+}
+
+private val Localizable.prod get(): Long {
+    var prod = 1L
+    for (d in 0 until numDimensions())
+        prod *= getLongPosition(d)
+    return prod
 }
