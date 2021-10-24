@@ -36,6 +36,13 @@ dependencies {
     implementation("com.google.protobuf:protobuf-kotlin:3.19.0-rc-1")
     api("io.grpc:grpc-protobuf:1.41.0")
     api("io.grpc:grpc-stub:1.41.0")
+
+    testImplementation(kotlin("test"))
+    testImplementation("io.grpc:grpc-netty:1.41.0")
+}
+
+tasks.test {
+    useJUnitPlatform()
 }
 
 // set up protobuf plugin
