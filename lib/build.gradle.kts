@@ -39,6 +39,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
     testImplementation("io.grpc:grpc-netty:1.41.0")
+    testImplementation("org.jetbrains.kotlin:kotlin-reflect")
 }
 
 tasks.test {

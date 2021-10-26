@@ -1,60 +1,48 @@
 package me.hanslovsky.n5.grpc
 
-import N5GRPCServiceGrpc
-import N5Grpc
+import com.google.gson.JsonElement
 import io.grpc.stub.StreamObserver
+import me.hanslovsky.n5.grpc.service.N5ReaderServiceBase
+import org.janelia.saalfeldlab.n5.DataBlock
+import org.janelia.saalfeldlab.n5.DatasetAttributes
 
 class TestService(
-    var readBlock: ((N5Grpc.BlockMeta) -> N5Grpc.Block)? = null,
-    var getAttributes: ((N5Grpc.Path) -> N5Grpc.JsonString)? = null,
-    var getDatasetAttributes: ((N5Grpc.Path) -> N5Grpc.DatasetAttributes)? = null,
-    var exists: ((N5Grpc.Path) -> N5Grpc.BooleanFlag)? = null,
-    var list: ((N5Grpc.Path) -> N5Grpc.Paths)? = null,
-    var datasetExists: ((N5Grpc.Path) ->N5Grpc.BooleanFlag)? = null
-) : N5GRPCServiceGrpc.N5GRPCServiceImplBase() {
-    override fun readBlock(request: N5Grpc.BlockMeta, responseObserver: StreamObserver<N5Grpc.Block>) {
-        readBlock.let { readBlock ->
-            if (readBlock == null) TODO("Implementation not provided")
-            responseObserver.onNextAndOnCompleted(readBlock.invoke(request))
-        }
+    var readBlock: ((String, DatasetAttributes, LongArray) -> DataBlock<*>?)? = null,
+    var getAttributes: ((String) -> Map<String, JsonElement>)? = null,
+    var getDatasetAttributes: ((String) -> DatasetAttributes)? = null,
+    var exists: ((String) -> Boolean)? = null,
+    var list: ((String) -> Array<String>)? = null,
+    var datasetExists: ((String) -> Boolean)? = null
+) : N5ReaderServiceBase(defaultGson) {
+
+    override fun readBlock(path: String, attributes: DatasetAttributes, vararg gridPosition: Long) = readBlock.let {
+        if(it == null) error("Implementation for readBlock not provided")
+        it(path, attributes, gridPosition)
     }
 
-    override fun getAttributes(request: N5Grpc.Path, responseObserver: StreamObserver<N5Grpc.JsonString>) {
-        getAttributes.let { getAttributes ->
-            if (getAttributes == null) TODO("Implementation not provided")
-            responseObserver.onNextAndOnCompleted(getAttributes.invoke(request))
-        }
+    override fun getAttributes(path: String): Map<String, JsonElement> = getAttributes.let {
+        if (it == null) error("Implementation for getAttributes not provided")
+        it(path)
     }
 
-    override fun getDatasetAttributes(
-        request: N5Grpc.Path,
-        responseObserver: StreamObserver<N5Grpc.DatasetAttributes>
-    ) {
-        getDatasetAttributes.let { getDatasetAttributes ->
-            if (getDatasetAttributes == null) TODO("Implementation not provided")
-            responseObserver.onNextAndOnCompleted(getDatasetAttributes.invoke(request))
-        }
+    override fun getDatasetAttributs(path: String) = getDatasetAttributes.let {
+        if (it == null) error ("Implementation for getDatasetAttributes not provided")
+        it(path)
     }
 
-    override fun exists(request: N5Grpc.Path, responseObserver: StreamObserver<N5Grpc.BooleanFlag>) {
-        exists.let { exists ->
-            if (exists == null) TODO("Implementation not provided")
-            responseObserver.onNextAndOnCompleted(exists.invoke(request))
-        }
+    override fun exists(path: String) = exists.let {
+        if (it == null) error ("Implementation for exists not provided")
+        it(path)
     }
 
-    override fun list(request: N5Grpc.Path, responseObserver: StreamObserver<N5Grpc.Paths>) {
-        list.let { list ->
-            if (list == null) TODO("Implementation not provided")
-            responseObserver.onNextAndOnCompleted(list.invoke(request))
-        }
+    override fun datasetExists(path: String) = datasetExists.let {
+        if (it == null) error("Implementation for datasetExists not provided")
+        it(path)
     }
 
-    override fun datasetExists(request: N5Grpc.Path, responseObserver: StreamObserver<N5Grpc.BooleanFlag>) {
-        datasetExists.let { datasetExists ->
-            if (datasetExists == null) TODO("Implementation not provided")
-            responseObserver.onNextAndOnCompleted(datasetExists.invoke(request))
-        }
+    override fun list(path: String) = list.let {
+        if (it == null) error("Implementation for list not provided")
+        it(path)
     }
 }
 

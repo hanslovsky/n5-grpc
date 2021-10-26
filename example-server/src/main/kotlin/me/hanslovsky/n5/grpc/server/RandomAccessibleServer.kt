@@ -213,7 +213,7 @@ class RandomAccessibleServer(serverBuilder: ServerBuilder<*>, vararg datasets: P
                 ServerBuilder.forPort(port).executor(Executors.newFixedThreadPool(numThreads) { Thread(it).also { it.isDaemon = true; it.name = "n5-grpc-server-${threadId.getAndIncrement()}" } }),
                 "my/dataset" to Element.Dataset(
                     FunctionRandomAccessible(3, { l, t -> t.setInteger(l.sum) }) { UnsignedLongType() },
-                    DatasetAttributes(longArrayOf(1230, 1340, 1450), intArrayOf(64, 64, 64), DataType.UINT64, RawCompression())),
+                    DatasetAttributes(longArrayOf(12300, 13400, 14500), intArrayOf(32, 32, 32), DataType.UINT64, RawCompression())),
                 "my/group" to null
             )
             server.start()
