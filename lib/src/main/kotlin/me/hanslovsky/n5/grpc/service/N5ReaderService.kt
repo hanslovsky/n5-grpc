@@ -13,7 +13,7 @@ class N5ReaderService private constructor (private val reader: GsonAttributesPar
 
     override fun readBlock(path: String, attributes: DatasetAttributes, vararg gridPosition: Long) = reader.readBlock(path, attributes, *gridPosition)
     override fun getAttributes(path: String) = reader.getAttributes(path)
-    override fun getDatasetAttributs(path: String) = reader.getDatasetAttributes(path)
+    override fun getDatasetAttributes(path: String) = reader.getDatasetAttributes(path)
     override fun exists(path: String) = reader.exists(path)
     override fun datasetExists(path: String) = reader.datasetExists(path)
     override fun list(path: String) = reader.list(path)

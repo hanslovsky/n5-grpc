@@ -25,7 +25,7 @@ class TestService(
         it(path)
     }
 
-    override fun getDatasetAttributs(path: String) = getDatasetAttributes.let {
+    override fun getDatasetAttributes(path: String) = getDatasetAttributes.let {
         if (it == null) error ("Implementation for getDatasetAttributes not provided")
         it(path)
     }

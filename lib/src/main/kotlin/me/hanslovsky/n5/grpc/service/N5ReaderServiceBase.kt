@@ -5,11 +5,9 @@ import N5Grpc
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.protobuf.ByteString
-import io.grpc.ServerBuilder
 import io.grpc.stub.StreamObserver
 import me.hanslovsky.n5.grpc.asDatasetAttributes
 import me.hanslovsky.n5.grpc.asMessage
-import me.hanslovsky.n5.grpc.defaultGson
 import org.janelia.saalfeldlab.n5.*
 import java.io.ByteArrayOutputStream
 
@@ -17,7 +15,7 @@ abstract class N5ReaderServiceBase(private val gson: Gson): N5GRPCServiceGrpc.N5
 
     abstract fun readBlock(path: String, attributes: DatasetAttributes, vararg gridPosition: Long): DataBlock<*>?
     abstract fun getAttributes(path: String): Map<String, JsonElement>
-    abstract fun getDatasetAttributs(path: String): DatasetAttributes
+    abstract fun getDatasetAttributes(path: String): DatasetAttributes
     abstract fun exists(path: String): Boolean
     abstract fun datasetExists(path: String): Boolean
     abstract fun list(path: String): Array<String>
@@ -48,7 +46,7 @@ abstract class N5ReaderServiceBase(private val gson: Gson): N5GRPCServiceGrpc.N5
         request: N5Grpc.Path,
         responseObserver: StreamObserver<N5Grpc.DatasetAttributes>
     ) {
-        responseObserver.onNext(getDatasetAttributs(request.pathName).asMessage(gson))
+        responseObserver.onNext(getDatasetAttributes(request.pathName).asMessage(gson))
         responseObserver.onCompleted()
     }
 
