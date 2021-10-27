@@ -3,14 +3,6 @@ plugins {
     application
 }
 
-repositories {
-    // Use Maven Central for resolving dependencies.
-    mavenCentral()
-
-    // SciJava repo for N5
-    add(maven("https://maven.scijava.org/content/groups/public"))
-}
-
 dependencies {
 
 

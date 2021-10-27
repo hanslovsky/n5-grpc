@@ -13,14 +13,6 @@ plugins {
     id("com.google.protobuf") version "0.8.17"
 }
 
-repositories {
-    // Use Maven Central for resolving dependencies.
-    mavenCentral()
-
-    // SciJava repo for N5
-     add(maven("https://maven.scijava.org/content/groups/public"))
-}
-
 dependencies {
 
     // Use the Kotlin JDK 8 standard library.
