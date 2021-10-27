@@ -1,10 +1,16 @@
 plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm") version "1.5.0" apply false
+
+    // use this to include pom-scijava bom
+    id("io.spring.dependency-management") version "1.0.11.RELEASE" apply true
 }
 
 
 allprojects {
+
+    System.setProperty("kotlin.version", "1.5.0")
+
     repositories {
         // Use Maven Central for resolving dependencies.
         mavenCentral()
@@ -13,11 +19,11 @@ allprojects {
         add(maven("https://maven.scijava.org/content/groups/public"))
     }
 
-//    dependencies {
-//        // Align versions of all Kotlin components
-//        implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
-//
-//        // Use the Kotlin JDK 8 standard library.
-//        implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-//    }
+    apply(plugin = "io.spring.dependency-management")
+
+    dependencyManagement {
+        imports {
+            mavenBom("org.scijava:pom-scijava:31.1.0")
+        }
+    }
 }

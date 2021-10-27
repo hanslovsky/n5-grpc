@@ -22,14 +22,12 @@ repositories {
 }
 
 dependencies {
-    // Align versions of all Kotlin components
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
 
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     // N5
-    api("org.janelia.saalfeldlab:n5:2.5.1")
+    api("org.janelia.saalfeldlab:n5")
 
     // protobuf
     implementation("io.grpc:grpc-kotlin-stub:1.2.0")
@@ -45,6 +43,7 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
+
 
 // set up protobuf plugin
 // TOOD how to fix issue "protoc: stdout: . stderr: protoc-gen-kotlin: program not found or is not executable
@@ -68,10 +67,6 @@ protobuf {
                 id("grpc")
                 id("grpckt")
             }
-            // TODO Do I need this?
-//            it.builtins {
-//                kotlin {}
-//            }
         }
     }
 }

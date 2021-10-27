@@ -7,7 +7,7 @@ import org.janelia.saalfeldlab.n5.AbstractGsonReader
 import org.janelia.saalfeldlab.n5.DatasetAttributes
 import org.janelia.saalfeldlab.n5.GsonAttributesParser
 
-class N5ReaderService private constructor (private val reader: GsonAttributesParser, val gson: Gson): N5ReaderServiceBase(gson) {
+class N5ReaderService private constructor (private val reader: GsonAttributesParser, gson: Gson): N5ReaderServiceBase(gson) {
 
     constructor(reader: GsonAttributesParser) : this(reader, if (reader is AbstractGsonReader) reader.gson else defaultGson)
 

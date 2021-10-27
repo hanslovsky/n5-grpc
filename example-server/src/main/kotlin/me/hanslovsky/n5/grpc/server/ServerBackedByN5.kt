@@ -27,7 +27,7 @@ class ServerBackedByN5(serverBuilder: ServerBuilder<*>, val port: Int, val reade
         @JvmStatic
         fun main(args: Array<String>) {
             val h5Reader = N5HDF5Reader("/home/zottel/Downloads/sample_A_20160501.hdf", true, 16, 16, 16)
-            val server = N5ReaderService.serve(h5Reader, 9090)
+            val server = N5ReaderService.serve(h5Reader as GsonAttributesParser, 9090)
             server.start()
             val reader = N5GrpcReader("localhost", 9090)
             val stack = mutableListOf("/")

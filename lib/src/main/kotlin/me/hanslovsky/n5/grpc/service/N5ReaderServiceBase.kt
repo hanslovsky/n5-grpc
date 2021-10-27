@@ -11,7 +11,7 @@ import me.hanslovsky.n5.grpc.asMessage
 import org.janelia.saalfeldlab.n5.*
 import java.io.ByteArrayOutputStream
 
-abstract class N5ReaderServiceBase(private val gson: Gson): N5GRPCServiceGrpc.N5GRPCServiceImplBase() {
+abstract class N5ReaderServiceBase(val gson: Gson): N5GRPCServiceGrpc.N5GRPCServiceImplBase() {
 
     abstract fun readBlock(path: String, attributes: DatasetAttributes, vararg gridPosition: Long): DataBlock<*>?
     abstract fun getAttributes(path: String): Map<String, JsonElement>

@@ -15,7 +15,7 @@ dependencies {
 
 
     // N5
-    implementation("org.janelia.saalfeldlab:n5:2.5.1")
+    implementation("org.janelia.saalfeldlab:n5")
 
     implementation(project(":lib"))
 
@@ -23,17 +23,17 @@ dependencies {
     implementation("io.grpc:grpc-netty:1.41.0")
 
     // use n5-hdf5 for example
-    implementation("org.janelia.saalfeldlab:n5-hdf5:1.4.1")
+    implementation("org.janelia.saalfeldlab:n5-hdf5")
 
     // imglib2 for function server
-    implementation("net.imglib2:imglib2:5.12.0")
-    implementation("org.janelia.saalfeldlab:n5-imglib2:4.1.1")
+    implementation("net.imglib2:imglib2:")
+    implementation("org.janelia.saalfeldlab:n5-imglib2")
 
     // CLI parser
-    implementation("info.picocli:picocli:4.6.1")
+    implementation("info.picocli:picocli")
 
     // bdv
-    implementation("sc.fiji:bigdataviewer-vistools:1.0.0-beta-29")
+    implementation("sc.fiji:bigdataviewer-vistools")
 }
 
 application {
