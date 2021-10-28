@@ -11,6 +11,13 @@ plugins {
     `java-library`
 
     id("com.google.protobuf") version "0.8.17"
+
+    `maven-publish`
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
 }
 
 dependencies {
@@ -69,5 +76,17 @@ sourceSets {
         java.srcDir("build/generated/source/proto/main/java")
         java.srcDir("build/generated/source/proto/main/grpc")
         java.srcDir("build/generated/source/proto/main/grpckt")
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "me.hanslovsky"
+            artifactId = "n5-grpc"
+            version = "0.1.0-SNAPSHOT"
+
+            from(components["java"])
+        }
     }
 }
