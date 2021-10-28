@@ -11,14 +11,14 @@ Experimental implementation of [`N5Reader`](https://github.com/saalfeldlab/n5) t
 ## Examples
 
 ### Server
-The [`example-server`](example-server) project contains an [example implementation](example-server/src/main/kotlin/me/hanslovsky/n5/grpc/server/RandomAccessibleServer.kt) of an N5 gRPC Server that provides a single dataset `my/dataset`.
+The [`n5-grpc-example-server`](n5-grpc-example-server) project contains an [example implementation](example-server/src/main/kotlin/me/hanslovsky/n5/grpc/server/RandomAccessibleServer.kt) of an N5 gRPC Server that provides a single dataset `my/dataset`.
 Execute the server with the gradle `run` task:
 ```shell
-./gradlew build :example-server:run
+./gradlew build :n5-grpc-example-server:run
 ```
 Use the `--args` flag to pass optional arguments, e.g. to set port or the number of gRPC worker threads:
 ```shell
-./gradlew build :example-server:run --args='--num-threads=3 --port=9090'
+./gradlew build :n5-grpc-example-server:run --args='--num-threads=3 --port=9090'
 ```
 Use the `--help` flags for a list of all options.
 

@@ -9,7 +9,7 @@ dependencies {
     // N5
     implementation("org.janelia.saalfeldlab:n5")
 
-    implementation(project(":lib"))
+    implementation(project(":n5-grpc"))
 
     // need netty server for tests/examples
     implementation("io.grpc:grpc-netty:1.41.0")
