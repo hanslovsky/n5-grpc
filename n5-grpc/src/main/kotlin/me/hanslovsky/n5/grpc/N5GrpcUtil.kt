@@ -12,18 +12,6 @@ fun String?.asPath() = N5Grpc.Path.newBuilder().setPathName(this ?: "/").build()
 fun N5Grpc.JsonString.reader() = jsonString.reader()
 fun ByteBuffer.asByteArray() = ByteArray(capacity()) { this[it] }
 fun ByteString.asByteArray() = asReadOnlyByteBuffer().asByteArray()
-fun N5Grpc.DatasetAttributes.compression(gson: Gson) =
-    compressionJsonString?.let { gson.fromJson(it, Compression::class.java) } ?: compressionType.compressionType
-
-val String?.compressionType: Compression get() = when(this) {
-    "raw" -> RawCompression()
-    "gzip" -> GzipCompression()
-    "bzip2" -> Bzip2Compression()
-    "lz4" -> Lz4Compression()
-    "xz" -> XzCompression()
-    null -> error("No compression type provided: compressionType=$this")
-    else -> error("Unknown compression type $this")
-}
 
 fun DatasetAttributes.asMessage(gson: Gson = defaultGson): N5Grpc.DatasetAttributes {
     return N5Grpc.DatasetAttributes.newBuilder().also { b ->
@@ -38,7 +26,7 @@ fun N5Grpc.DatasetAttributes.asDatasetAttributes(gson: Gson = defaultGson) = Dat
     LongArray(dimensionsCount) { getDimensions(it) },
     IntArray(blockSizeCount) { getBlockSize(it) },
     DataType.fromString(dataType),
-    compressionJsonString?.run { toCompression(gson) } ?: compressionType.compressionType
+    compressionJsonString.toCompression(gson)
 )
 
 private fun Compression.toJson(gson: Gson) = gson.toJson(this)

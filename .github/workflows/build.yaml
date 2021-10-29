@@ -26,4 +26,4 @@ jobs:
           java-version: "${{ matrix.jdk }}"
           distribution: "adopt"
       - name: Build and execute unit tests
-        run: ./gradlew clean build test
+        run: ./gradlew clean build check jacocoTestCoverageVerification

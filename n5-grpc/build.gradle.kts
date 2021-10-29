@@ -87,12 +87,36 @@ publishing {
 }
 
 // jacoco configuration
+tasks.check {
+    // generate jacoco report when running check task
+    dependsOn(tasks.jacocoTestReport)
+}
+
 tasks.test {
     configure<JacocoTaskExtension> {
         // TODO For some reason, exclude does not work.
         //      Leave it in here for reference
-        exclude("**/generated/**/*class")
+        exclude("**/generated/**/*")
         exclude("me.hanslovsky.n5.grpc.generated.*")
+    }
+}
+
+tasks.jacocoTestCoverageVerification {
+    // exclude does not work. Exclude class files explicitly
+    classDirectories.setFrom(
+            listOf("java", "kotlin")
+                    .map { fileTree("build/classes/$it/main") }
+                    .map { it.filter { f -> !f.path.contains("me/hanslovsky/n5/grpc/generated") } }
+    )
+    violationRules {
+        rule {
+            // TODO For some reason, excludes does not work.
+            //      Leave it in here for reference
+            excludes = listOf("me.hanslovsky.n5.grpc.generated.*")
+            limit {
+                minimum = 0.8.toBigDecimal()
+            }
+        }
     }
 }
 
@@ -104,7 +128,7 @@ tasks.jacocoTestReport {
     classDirectories.setFrom(
             listOf("java", "kotlin")
                     .map { fileTree("build/classes/$it/main") }
-                    .map { it.filter { f -> !f.path.contains("me/hanslovsky/n5/grpc/generated") }}
+                    .map { it.filter { f -> !f.path.contains("me/hanslovsky/n5/grpc/generated") } }
     )
 
     reports {

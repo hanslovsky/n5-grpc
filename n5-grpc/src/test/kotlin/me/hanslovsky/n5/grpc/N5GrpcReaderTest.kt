@@ -2,6 +2,7 @@ package me.hanslovsky.n5.grpc
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
+import com.google.gson.reflect.TypeToken
 import io.grpc.StatusRuntimeException
 import io.grpc.inprocess.InProcessChannelBuilder
 import io.grpc.inprocess.InProcessServerBuilder
@@ -58,8 +59,8 @@ internal class N5GrpcReaderTest {
     @ExtendWith(EnableExists::class)
     @Test
     fun exists() {
-        Assertions.assertTrue(reader.datasetExists(groupPath))
-        Assertions.assertFalse(reader.datasetExists(datasetPath))
+        Assertions.assertTrue(reader.exists(groupPath))
+        Assertions.assertTrue(reader.exists(datasetPath))
     }
 
     @ExtendWith(EnableDatasetExists::class)
@@ -82,6 +83,17 @@ internal class N5GrpcReaderTest {
     fun getAttributes() {
         Assertions.assertEquals(fooBarAttributes, reader.getAttributes(groupPath))
         Assertions.assertEquals(emptyAttributes, reader.getAttributes(datasetPath))
+    }
+
+    @ExtendWith(EnableGetAttributes::class)
+    @Test
+    fun getAttribute() {
+        Assertions.assertEquals(
+                fooBarAttributes["foo"],
+                reader.getAttribute(groupPath, "foo", JsonElement::class.java))
+        Assertions.assertEquals(
+                fooBarAttributes["foo"],
+                reader.getAttribute(groupPath, "foo", object : TypeToken<JsonElement>() {}.type))
     }
 
     class EnableGetDatasetAttributes : AfterTestExecutionCallback, BeforeTestExecutionCallback {
@@ -109,8 +121,8 @@ internal class N5GrpcReaderTest {
     }
 
     class EnableExists : AfterTestExecutionCallback, BeforeTestExecutionCallback {
-        override fun beforeTestExecution(context: ExtensionContext?) { testService.datasetExists = { it == groupPath } }
-        override fun afterTestExecution(context: ExtensionContext?) { testService.datasetExists = null }
+        override fun beforeTestExecution(context: ExtensionContext?) { testService.exists = { it == groupPath || it == datasetPath } }
+        override fun afterTestExecution(context: ExtensionContext?) { testService.exists = null }
     }
 
     class EnableDatasetExists : AfterTestExecutionCallback, BeforeTestExecutionCallback {

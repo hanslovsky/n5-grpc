@@ -42,5 +42,4 @@ message DatasetAttributes {
   repeated uint32 blockSize = 2 [packed=true];
   string dataType = 3;
   string compressionJsonString = 4;
-  string compressionType = 5;
 }
