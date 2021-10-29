@@ -56,15 +56,11 @@ protobuf {
         id("grpc") {
             artifact = "io.grpc:protoc-gen-grpc-java:1.41.0"
         }
-        id("grpckt") {
-            artifact = "io.grpc:protoc-gen-grpc-kotlin:1.2.0:jdk7@jar"
-        }
     }
     generateProtoTasks {
         all().forEach {
             it.plugins {
                 id("grpc")
-                id("grpckt")
             }
         }
     }
@@ -75,7 +71,6 @@ sourceSets {
     named("main") {
         java.srcDir("build/generated/source/proto/main/java")
         java.srcDir("build/generated/source/proto/main/grpc")
-        java.srcDir("build/generated/source/proto/main/grpckt")
     }
 }
 
