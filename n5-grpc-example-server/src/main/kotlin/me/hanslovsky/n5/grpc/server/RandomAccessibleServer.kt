@@ -1,7 +1,5 @@
 package me.hanslovsky.n5.grpc.server
 
-import N5GRPCServiceGrpc
-import N5Grpc
 import com.google.protobuf.UnsafeByteOperations
 import io.grpc.Server
 import io.grpc.ServerBuilder
@@ -9,6 +7,8 @@ import io.grpc.stub.StreamObserver
 import me.hanslovsky.n5.grpc.N5GrpcReader
 import me.hanslovsky.n5.grpc.asMessage
 import me.hanslovsky.n5.grpc.defaultGson
+import me.hanslovsky.n5.grpc.generated.N5GRPCServiceGrpc
+import me.hanslovsky.n5.grpc.generated.N5Grpc
 import net.imglib2.Localizable
 import net.imglib2.RandomAccessible
 import net.imglib2.position.FunctionRandomAccessible

@@ -7,11 +7,11 @@ import com.google.protobuf.gradle.protoc
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
-    // Apply the java-library plugin for API and implementation separation.
-    `java-library`
 
     id("com.google.protobuf") version "0.8.17"
 
+    jacoco
+    `java-library`
     `maven-publish`
 }
 
@@ -88,5 +88,33 @@ publishing {
 
             from(components["java"])
         }
+    }
+}
+
+// jacoco configuration
+tasks.test {
+    configure<JacocoTaskExtension> {
+        // TODO For some reason, exclude does not work.
+        //      Leave it in here for reference
+        exclude("**/generated/**/*class")
+        exclude("me.hanslovsky.n5.grpc.generated.*")
+    }
+}
+
+tasks.jacocoTestReport {
+
+    dependsOn(tasks.test)
+    sourceSets(sourceSets.main.get())
+    // exclude does not work. Exclude class files explicitly
+    classDirectories.setFrom(
+            listOf("java", "kotlin")
+                    .map { fileTree("build/classes/$it/main") }
+                    .map { it.filter { f -> !f.path.contains("me/hanslovsky/n5/grpc/generated") }}
+    )
+
+    reports {
+        xml.required.set(true)
+        csv.required.set(true)
+        html.required.set(true)
     }
 }

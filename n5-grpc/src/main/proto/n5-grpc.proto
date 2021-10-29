@@ -1,4 +1,5 @@
 syntax = "proto3";
+option java_package = "me.hanslovsky.n5.grpc.generated";
 
 service N5GRPCService {
   rpc ReadBlock(BlockMeta) returns (Block);

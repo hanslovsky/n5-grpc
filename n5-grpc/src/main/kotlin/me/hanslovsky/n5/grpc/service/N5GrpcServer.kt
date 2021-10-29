@@ -1,6 +1,7 @@
 package me.hanslovsky.n5.grpc.service
 
 import io.grpc.ServerBuilder
+import me.hanslovsky.n5.grpc.generated.N5GRPCServiceGrpc
 import java.util.concurrent.TimeUnit
 
 class N5GrpcServer(serverBuilder: ServerBuilder<*>, service: N5GRPCServiceGrpc.N5GRPCServiceImplBase) {

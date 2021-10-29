@@ -1,7 +1,5 @@
 package me.hanslovsky.n5.grpc.server
 
-import N5GRPCServiceGrpc
-import N5Grpc
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.protobuf.ByteString
@@ -13,6 +11,8 @@ import org.janelia.saalfeldlab.n5.DatasetAttributes
 import org.janelia.saalfeldlab.n5.RawCompression
 import me.hanslovsky.n5.grpc.N5GrpcReader
 import me.hanslovsky.n5.grpc.asMessage
+import me.hanslovsky.n5.grpc.generated.N5GRPCServiceGrpc
+import me.hanslovsky.n5.grpc.generated.N5Grpc
 import java.nio.ByteBuffer
 import java.util.concurrent.TimeUnit
 

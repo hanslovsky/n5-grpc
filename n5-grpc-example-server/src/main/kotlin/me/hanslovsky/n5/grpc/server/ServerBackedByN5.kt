@@ -1,22 +1,11 @@
 package me.hanslovsky.n5.grpc.server
 
-import N5GRPCServiceGrpc
-import N5Grpc
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.protobuf.ByteString
-import io.grpc.Server
 import io.grpc.ServerBuilder
-import io.grpc.stub.StreamObserver
-import org.janelia.saalfeldlab.n5.*
 import me.hanslovsky.n5.grpc.N5GrpcReader
-import me.hanslovsky.n5.grpc.asDatasetAttributes
-import me.hanslovsky.n5.grpc.asMessage
-import me.hanslovsky.n5.grpc.defaultGson
 import me.hanslovsky.n5.grpc.service.N5ReaderService
+import org.janelia.saalfeldlab.n5.GsonAttributesParser
 import org.janelia.saalfeldlab.n5.hdf5.N5HDF5Reader
-import java.io.ByteArrayOutputStream
-import java.util.concurrent.TimeUnit
 
 
 class ServerBackedByN5(serverBuilder: ServerBuilder<*>, val port: Int, val reader: GsonAttributesParser) {

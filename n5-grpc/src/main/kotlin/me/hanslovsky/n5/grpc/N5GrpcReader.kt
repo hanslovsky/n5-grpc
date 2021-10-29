@@ -1,19 +1,17 @@
 package me.hanslovsky.n5.grpc
 
-import N5GRPCServiceGrpc
-import N5Grpc
-import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.google.protobuf.ByteString
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
+import me.hanslovsky.n5.grpc.generated.N5GRPCServiceGrpc
+import me.hanslovsky.n5.grpc.generated.N5Grpc
 import org.janelia.saalfeldlab.n5.*
 import java.io.ByteArrayInputStream
 import java.lang.reflect.Type
 
 class N5GrpcReader private constructor(
-    private val stub: N5GRPCServiceGrpc.N5GRPCServiceBlockingStub,
-    gsonBuilder: GsonBuilder = defaultGsonBuilder
+        private val stub: N5GRPCServiceGrpc.N5GRPCServiceBlockingStub,
+        gsonBuilder: GsonBuilder = defaultGsonBuilder
 ) : GsonAttributesParser, N5Reader {
 
     // We cannot override getGson using a field named gson, unfortunately.

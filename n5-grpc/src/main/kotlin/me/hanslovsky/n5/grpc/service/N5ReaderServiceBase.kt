@@ -1,13 +1,13 @@
 package me.hanslovsky.n5.grpc.service
 
-import N5GRPCServiceGrpc
-import N5Grpc
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.protobuf.ByteString
 import io.grpc.stub.StreamObserver
 import me.hanslovsky.n5.grpc.asDatasetAttributes
 import me.hanslovsky.n5.grpc.asMessage
+import me.hanslovsky.n5.grpc.generated.N5GRPCServiceGrpc
+import me.hanslovsky.n5.grpc.generated.N5Grpc
 import org.janelia.saalfeldlab.n5.*
 import java.io.ByteArrayOutputStream
 
