@@ -3,6 +3,9 @@ package me.hanslovsky.n5.grpc
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
 import io.grpc.StatusRuntimeException
+import io.grpc.inprocess.InProcessChannelBuilder
+import io.grpc.inprocess.InProcessServerBuilder
+import java.util.UUID
 import kotlin.reflect.full.isSubclassOf
 import me.hanslovsky.n5.grpc.service.N5GrpcServer
 import org.janelia.saalfeldlab.n5.*
@@ -18,7 +21,7 @@ import org.junit.jupiter.api.extension.ExtensionContext
 
 internal class N5GrpcReaderTest {
 
-    private val reader = N5GrpcReader(host="localhost", port=9090)
+    private val reader = N5GrpcReader(channel)
 
     @ExtendWith(EnableGetDatasetAttributes::class)
     @Test
@@ -127,7 +130,9 @@ internal class N5GrpcReaderTest {
 
     companion object {
         private val testService = TestService()
-        private val server = N5GrpcServer(9090, testService)
+        private val serverName = "n5-grpc-${UUID.randomUUID()}"
+        private val server = N5GrpcServer(InProcessServerBuilder.forName(serverName), testService)
+        private val channel = InProcessChannelBuilder.forName(serverName).directExecutor().build()
 
         private val groupPath = "my/group"
         private val datasetPath = "my/dataset"
@@ -158,6 +163,9 @@ internal class N5GrpcReaderTest {
 
         @JvmStatic
         @AfterAll
-        fun stopServer() = server.stop()
+        fun stopServer() {
+            channel.shutdown()
+            server.stop()
+        }
     }
 }

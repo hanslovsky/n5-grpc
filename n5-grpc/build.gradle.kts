@@ -35,7 +35,7 @@ dependencies {
     api("io.grpc:grpc-stub:1.41.0")
 
     testImplementation(kotlin("test"))
-    testImplementation("io.grpc:grpc-netty:1.41.0")
+    testImplementation("io.grpc:grpc-core:1.41.0")
     testImplementation("org.jetbrains.kotlin:kotlin-reflect")
 }
 
