@@ -49,7 +49,8 @@ internal class N5GrpcReaderTest {
     @Test
     fun readBlock() {
         val readBlock = reader.readBlock(datasetPath, reader.getDatasetAttributes(datasetPath)!!, *blockPosition)
-        Assertions.assertTrue(readBlock.data::class.isSubclassOf(block.data::class))
+        Assertions.assertNotNull(readBlock)
+        Assertions.assertTrue(readBlock!!.data::class.isSubclassOf(block.data::class))
         Assertions.assertEquals(block.numElements, readBlock.numElements)
         Assertions.assertArrayEquals(block.size, readBlock.size)
         Assertions.assertArrayEquals(block.gridPosition, readBlock.gridPosition)
@@ -94,6 +95,21 @@ internal class N5GrpcReaderTest {
         Assertions.assertEquals(
                 fooBarAttributes["foo"],
                 reader.getAttribute(groupPath, "foo", object : TypeToken<JsonElement>() {}.type))
+    }
+
+    @ExtendWith(EnableExists::class)
+    @Test
+    fun autoClose() {
+        val reader = N5GrpcReader.AutoCloseableReader(channelBuilder)
+        reader.use {
+            Assertions.assertTrue(reader.exists(groupPath))
+            Assertions.assertTrue(reader.exists(datasetPath))
+            Assertions.assertFalse(reader.isClosed)
+        }
+        Assertions.assertTrue(reader.isClosed)
+        Assertions.assertThrows(StatusRuntimeException::class.java) {
+            reader.exists(groupPath)
+        }
     }
 
     class EnableGetDatasetAttributes : AfterTestExecutionCallback, BeforeTestExecutionCallback {
@@ -144,7 +160,8 @@ internal class N5GrpcReaderTest {
         private val testService = TestService()
         private val serverName = "n5-grpc-${UUID.randomUUID()}"
         private val server = N5GrpcServer(InProcessServerBuilder.forName(serverName), testService)
-        private val channel = InProcessChannelBuilder.forName(serverName).directExecutor().build()
+        private val channelBuilder = InProcessChannelBuilder.forName(serverName).directExecutor()
+        private val channel = channelBuilder.build()
 
         private val groupPath = "my/group"
         private val datasetPath = "my/dataset"

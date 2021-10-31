@@ -11,6 +11,7 @@ import org.janelia.saalfeldlab.n5.DatasetAttributes
 import org.janelia.saalfeldlab.n5.RawCompression
 import me.hanslovsky.n5.grpc.N5GrpcReader
 import me.hanslovsky.n5.grpc.asMessage
+import me.hanslovsky.n5.grpc.asNullableMessage
 import me.hanslovsky.n5.grpc.generated.N5GRPCServiceGrpc
 import me.hanslovsky.n5.grpc.generated.N5Grpc
 import java.nio.ByteBuffer
@@ -38,7 +39,7 @@ class DummyServer(
 
     init {
         val service = object : N5GRPCServiceGrpc.N5GRPCServiceImplBase() {
-            override fun readBlock(request: N5Grpc.BlockMeta, responseObserver: StreamObserver<N5Grpc.Block>) {
+            override fun readBlock(request: N5Grpc.BlockMeta, responseObserver: StreamObserver<N5Grpc.NullableBlock>) {
                 val dataBuffer = ByteBuffer.allocate(
                     0
                             + 2 // mode
@@ -63,7 +64,9 @@ class DummyServer(
                     putValue(v)
 
                 val data = dataBuffer.array()
-                responseObserver.onNext(N5Grpc.Block.newBuilder().setData(ByteString.copyFrom(data)).build())
+                val blocKMessage = N5Grpc.Block.newBuilder().setData(ByteString.copyFrom(data)).build()
+                val nullableBlockMessage = N5Grpc.NullableBlock.newBuilder().setBlock(blocKMessage).build()
+                responseObserver.onNext(nullableBlockMessage)
                 responseObserver.onCompleted()
             }
 
@@ -103,9 +106,9 @@ class DummyServer(
 
             override fun getDatasetAttributes(
                 request: N5Grpc.Path?,
-                responseObserver: StreamObserver<N5Grpc.DatasetAttributes>
+                responseObserver: StreamObserver<N5Grpc.NullableDatasetAttributes>
             ) {
-                responseObserver.onNext(DatasetAttributes(dimensions, blockSize, dataType, RawCompression()).asMessage())
+                responseObserver.onNext(DatasetAttributes(dimensions, blockSize, dataType, RawCompression()).asNullableMessage())
                 responseObserver.onCompleted()
             }
 
@@ -152,7 +155,7 @@ class DummyServer(
             println(reader.list("abcd").toList())
             val attributes = reader.getDatasetAttributes("abc")!!
             val data = reader.readBlock("abc", attributes, 0, 0, 0)
-            println((data.data as DoubleArray).joinToString(prefix = "[", postfix = "]"))
+            println((data!!.data as DoubleArray).joinToString(prefix = "[", postfix = "]"))
         }
 
         private fun Map<String, *>.toJsonString(gson: Gson = GsonBuilder().create()) = gson.toJson(this)

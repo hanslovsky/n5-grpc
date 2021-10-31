@@ -6,6 +6,7 @@ import io.grpc.ServerBuilder
 import io.grpc.stub.StreamObserver
 import me.hanslovsky.n5.grpc.N5GrpcReader
 import me.hanslovsky.n5.grpc.asMessage
+import me.hanslovsky.n5.grpc.asNullableMessage
 import me.hanslovsky.n5.grpc.defaultGson
 import me.hanslovsky.n5.grpc.generated.N5GRPCServiceGrpc
 import me.hanslovsky.n5.grpc.generated.N5Grpc
@@ -95,37 +96,29 @@ class RandomAccessibleServer(serverBuilder: ServerBuilder<*>, vararg datasets: P
 
     init {
         val service = object : N5GRPCServiceGrpc.N5GRPCServiceImplBase() {
-            override fun readBlock(request: N5Grpc.BlockMeta, responseObserver: StreamObserver<N5Grpc.Block>) {
+            override fun readBlock(request: N5Grpc.BlockMeta, responseObserver: StreamObserver<N5Grpc.NullableBlock>) {
 
                 val path = request.path.pathName
                 val group = root.forPath(path)
+                val dataset = group?.dataset
+                val attributes = dataset?.attributes
                 val data = if (true == group?.isDataset) {
-                    val dataset = group.dataset!!
                     val gridPosition = LongArray(request.gridPositionCount) { request.getGridPosition(it) }
                     val blocks = mutableListOf<DataBlock<*>?>()
                     val dummyWriter = N5CallbackWriter { _, block -> blocks += block }
-                    val min = dataset.minFor(*gridPosition)
+                    val min = dataset!!.minFor(*gridPosition)
                     val max = dataset.maxFor(*gridPosition)
                     N5Utils.save(
                         Views.interval(dataset.ra, min, max),
                         dummyWriter,
                         path,
-                        dataset.attributes.blockSize,
-                        dataset.attributes.compression
+                        attributes!!.blockSize,
+                        attributes.compression
                     )
-
-                    val data = UnsafeByteArrayOutputStream().use {
-                        DefaultBlockWriter.writeBlock(
-                            it,
-                            dataset.attributes,
-                            blocks[0]
-                        )
-                        UnsafeByteOperations.unsafeWrap(it.currentBufUnsafe, 0, it.currentCount)
-                    }
-                    data
+                    blocks[0]
                 } else
                     null
-                responseObserver.onNext(N5Grpc.Block.newBuilder().setData(data).build())
+                responseObserver.onNext(data.asNullableMessage(attributes))
                 responseObserver.onCompleted()
             }
 
@@ -159,9 +152,9 @@ class RandomAccessibleServer(serverBuilder: ServerBuilder<*>, vararg datasets: P
 
             override fun getDatasetAttributes(
                 request: N5Grpc.Path,
-                responseObserver: StreamObserver<N5Grpc.DatasetAttributes>
+                responseObserver: StreamObserver<N5Grpc.NullableDatasetAttributes>
             ) {
-                responseObserver.onNext(root.forPath(request.pathName)?.dataset?.attributes?.asMessage(defaultGson))
+                responseObserver.onNext(root.forPath(request.pathName)?.dataset?.attributes.asNullableMessage(defaultGson))
                 responseObserver.onCompleted()
             }
 

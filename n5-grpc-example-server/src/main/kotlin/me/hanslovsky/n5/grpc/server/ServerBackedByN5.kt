@@ -32,7 +32,7 @@ class ServerBackedByN5(serverBuilder: ServerBuilder<*>, val port: Int, val reade
             val dsAttributes = reader.getDatasetAttributes("/volumes/raw")!!
             println("attributes=$attributes")
             println("dsAttributes=$dsAttributes")
-            val data = reader.readBlock("/volumes/raw", dsAttributes, 0, 0, 0)
+            val data = reader.readBlock("/volumes/raw", dsAttributes, 0, 0, 0)!!
             println((data.data as ByteArray).joinToString(prefix = "[", postfix = "]"))
             println((data.data as ByteArray).size)
         }

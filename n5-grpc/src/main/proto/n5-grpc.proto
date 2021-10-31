@@ -1,13 +1,16 @@
 syntax = "proto3";
 option java_package = "me.hanslovsky.n5.grpc.generated";
+package me.hanslovsky.n5.grpc.generated;
+
+import "google/protobuf/struct.proto";
 
 service N5GRPCService {
-  rpc ReadBlock(BlockMeta) returns (Block);
+  rpc ReadBlock(BlockMeta) returns (NullableBlock);
   rpc Exists(Path) returns (BooleanFlag);
   rpc DatasetExists(Path) returns (BooleanFlag);
   rpc List(Path) returns (Paths);
   rpc GetAttributes(Path) returns (JsonString);
-  rpc GetDatasetAttributes(Path) returns (DatasetAttributes);
+  rpc GetDatasetAttributes(Path) returns (NullableDatasetAttributes);
 }
 
 message Path {
@@ -37,9 +40,23 @@ message Block {
   // TODO should Block hold its position and size? Could be used for confirmation purposes
 }
 
+message NullableBlock {
+  oneof kind {
+    Block block = 1;
+    google.protobuf.NullValue empty = 2;
+  }
+}
+
 message DatasetAttributes {
   repeated uint64 dimensions = 1 [packed=true];
   repeated uint32 blockSize = 2 [packed=true];
   string dataType = 3;
   string compressionJsonString = 4;
+}
+
+message NullableDatasetAttributes {
+  oneof kind {
+    DatasetAttributes datasetAttributes = 1;
+    google.protobuf.NullValue empty = 2;
+  }
 }

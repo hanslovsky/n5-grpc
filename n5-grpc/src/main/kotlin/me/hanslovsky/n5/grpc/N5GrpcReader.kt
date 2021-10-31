@@ -46,13 +46,13 @@ class N5GrpcReader private constructor(
         GsonAttributesParser.parseAttribute(getAttributes(pathName), key, type, gson)
 
     override fun getDatasetAttributes(pathName: String?): DatasetAttributes? =
-        stub.getDatasetAttributes(pathName.asPath())?.asDatasetAttributes(gson)
+        stub.getDatasetAttributes(pathName.asPath())?.asDatasetAttributesOrNull(gson)
 
     override fun readBlock(
         pathName: String?,
         datasetAttributes: DatasetAttributes,
         vararg gridPosition: Long
-    ): DataBlock<*> {
+    ): DataBlock<*>? {
         val builder = N5Grpc.BlockMeta.newBuilder().also { builder ->
             builder.path = pathName.asPath()
             gridPosition.forEach { builder.addGridPosition(it) }
@@ -60,14 +60,7 @@ class N5GrpcReader private constructor(
         }
         val meta = builder.build()
         val response = stub.readBlock(meta)
-        val block = DefaultBlockReader.readBlock(
-            // TODO can we do this without array() call?
-            ByteArrayInputStream(response.data.asByteArray()),
-            datasetAttributes,
-            gridPosition
-        )
-        // TODO do we need to do verifications on block?
-        return block
+        return response.asDataBlockOrNull(datasetAttributes, *gridPosition)
     }
 
     override fun exists(pathName: String?) =  stub.exists(pathName.asPath()).flag
@@ -80,6 +73,37 @@ class N5GrpcReader private constructor(
         GsonAttributesParser.readAttributes(stub.getAttributes(pathName.asPath()).reader(), gson)
 
     companion object {
+
+    }
+
+    class AutoCloseableReader private constructor(
+            private val channel: ManagedChannel,
+            gsonBuilder: GsonBuilder = defaultGsonBuilder,
+            // delegate needs to be defined in constructor for delegation
+            private val delegate: GsonAttributesParser = N5GrpcReader(N5GRPCServiceGrpc.newBlockingStub(channel), gsonBuilder)
+    ) : GsonAttributesParser by delegate, N5Reader {
+
+        @JvmOverloads constructor(
+                host: String,
+                port: Int,
+                gsonBuilder: GsonBuilder = defaultGsonBuilder
+        ) : this(ManagedChannelBuilder.forAddress(host, port), gsonBuilder)
+
+        @JvmOverloads constructor(
+                target: String,
+                gsonBuilder: GsonBuilder = defaultGsonBuilder
+        ) : this(ManagedChannelBuilder.forTarget(target), gsonBuilder)
+
+        @JvmOverloads constructor(
+                channelBuilder: ManagedChannelBuilder<*>,
+                gsonBuilder: GsonBuilder = defaultGsonBuilder
+        ) : this(channelBuilder.usePlaintext().build(), gsonBuilder)
+
+        val isClosed: Boolean get() = channel.isShutdown
+
+        override fun close() {
+            channel.shutdown()
+        }
 
     }
 }
