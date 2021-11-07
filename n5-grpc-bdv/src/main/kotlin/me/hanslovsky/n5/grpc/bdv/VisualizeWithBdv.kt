@@ -5,6 +5,7 @@ import bdv.util.BdvOptions
 import bdv.util.volatiles.SharedQueue
 import bdv.util.volatiles.VolatileViews
 import me.hanslovsky.n5.grpc.N5GrpcReader
+import me.hanslovsky.n5.grpc.generated.N5Grpc
 import net.imglib2.RandomAccessibleInterval
 import net.imglib2.type.numeric.integer.*
 import net.imglib2.type.numeric.real.DoubleType
@@ -41,7 +42,22 @@ class VisualizeWithBdv: Callable<Int> {
     @CommandLine.Option(names = ["--help", "-h"], required = false, usageHelp = true)
     var help: Boolean = false
 
+    @CommandLine.Option(names = ["--health-check"], required = false)
+    var healthCheck: Boolean = false
+
     override fun call(): Int {
+
+        if (healthCheck) {
+            N5GrpcReader.AutoCloseableReader(host, port).use {
+                val healthStatus = it.healthCheck()
+                println("healthStatus=$healthStatus")
+                return when(healthStatus) {
+                    N5Grpc.HealthStatus.Status.SERVING -> 0
+                    else -> 1
+                }
+            }
+        }
+
         if (!this::datasets.isInitialized) {
             System.err.println("No datasets provided.")
             return 1

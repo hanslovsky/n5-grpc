@@ -80,7 +80,7 @@ class N5GrpcReader private constructor(
             private val channel: ManagedChannel,
             gsonBuilder: GsonBuilder = defaultGsonBuilder,
             // delegate needs to be defined in constructor for delegation
-            private val delegate: GsonAttributesParser = N5GrpcReader(N5GRPCServiceGrpc.newBlockingStub(channel), gsonBuilder)
+            private val delegate: N5GrpcReader = N5GrpcReader(N5GRPCServiceGrpc.newBlockingStub(channel), gsonBuilder)
     ) : GsonAttributesParser by delegate, N5Reader {
 
         @JvmOverloads constructor(
@@ -104,6 +104,8 @@ class N5GrpcReader private constructor(
         override fun close() {
             channel.shutdown()
         }
+
+        fun healthCheck() = delegate.healthCheck()
 
     }
 }
