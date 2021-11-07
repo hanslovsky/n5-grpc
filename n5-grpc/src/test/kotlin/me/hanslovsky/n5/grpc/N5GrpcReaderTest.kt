@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken
 import io.grpc.StatusRuntimeException
 import io.grpc.inprocess.InProcessChannelBuilder
 import io.grpc.inprocess.InProcessServerBuilder
+import me.hanslovsky.n5.grpc.generated.N5Grpc
 import java.util.UUID
 import kotlin.reflect.full.isSubclassOf
 import me.hanslovsky.n5.grpc.service.N5GrpcServer
@@ -109,6 +110,20 @@ internal class N5GrpcReaderTest {
         Assertions.assertTrue(reader.isClosed)
         Assertions.assertThrows(StatusRuntimeException::class.java) {
             reader.exists(groupPath)
+        }
+    }
+
+    @Test
+    fun healthCheck() {
+        Assertions.assertEquals(N5Grpc.HealthStatus.Status.SERVING, reader.healthCheck())
+    }
+
+    @Test
+    fun healthCheckFail() {
+        N5GrpcReader(InProcessChannelBuilder.forName("invalid-name").directExecutor()).use { reader ->
+            Assertions.assertThrows(StatusRuntimeException::class.java) {
+                reader.healthCheck()
+            }
         }
     }
 

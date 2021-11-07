@@ -72,8 +72,8 @@ class N5GrpcReader private constructor(
     override fun getAttributes(pathName: String?) =
         GsonAttributesParser.readAttributes(stub.getAttributes(pathName.asPath()).reader(), gson)
 
-    companion object {
-
+    fun healthCheck(): N5Grpc.HealthStatus.Status {
+        return stub.healthCheck(N5Grpc.HealthRequest.newBuilder().build()).status
     }
 
     class AutoCloseableReader private constructor(

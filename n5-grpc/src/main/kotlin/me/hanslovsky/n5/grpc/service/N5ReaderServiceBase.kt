@@ -64,6 +64,11 @@ abstract class N5ReaderServiceBase(val gson: Gson): N5GRPCServiceGrpc.N5GRPCServ
         responseObserver.onCompleted()
     }
 
+    override fun healthCheck(request: N5Grpc.HealthRequest?, responseObserver: StreamObserver<N5Grpc.HealthStatus>) {
+        responseObserver.onNext(N5Grpc.HealthStatus.newBuilder().setStatus(N5Grpc.HealthStatus.Status.SERVING).build())
+        responseObserver.onCompleted()
+    }
+
 }
 
 private fun Map<String, *>.toJsonString(gson: Gson) = gson.toJson(this)

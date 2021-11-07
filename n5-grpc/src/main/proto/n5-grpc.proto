@@ -11,6 +11,7 @@ service N5GRPCService {
   rpc List(Path) returns (Paths);
   rpc GetAttributes(Path) returns (JsonString);
   rpc GetDatasetAttributes(Path) returns (NullableDatasetAttributes);
+  rpc HealthCheck(HealthRequest) returns (HealthStatus);
 }
 
 message Path {
@@ -59,4 +60,15 @@ message NullableDatasetAttributes {
     DatasetAttributes datasetAttributes = 1;
     google.protobuf.NullValue empty = 2;
   }
+}
+
+message HealthRequest {}
+
+message HealthStatus {
+  enum Status {
+    SERVING = 0;
+    NOT_SERVING = 1;
+    UNKNOWN = 2;
+  }
+  Status status = 1;
 }
