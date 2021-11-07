@@ -29,5 +29,5 @@ dependencies {
 }
 
 application {
-    mainClass.set(project.properties["mainClass"]?.toString() ?: "me.hanslovsky.n5.grpc.server.RandomAccessibleServer")
+    mainClass.set(project.properties["mainClass"]?.toString() ?: "me.hanslovsky.n5.grpc.server.RasterizedTextServer")
 }

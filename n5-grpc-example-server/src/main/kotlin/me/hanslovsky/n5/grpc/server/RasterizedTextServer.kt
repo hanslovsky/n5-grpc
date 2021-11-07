@@ -110,7 +110,7 @@ class RasterizedTextServer(
             val server = ServerBuilder
                 .forPort(port)
                 .executor(Executors.newFixedThreadPool(numThreads) { Thread(it).also { it.isDaemon = true; it.name = "n5-grpc-server-${threadId.getAndIncrement()}" } })
-                .addService(RasterizedTextServer(intArrayOf(32, 32, 32), "N5 is", "", "the", "best\n\there\nis", "", "especially\nwith", "Kotlin"))
+                .addService(RasterizedTextServer(intArrayOf(32, 32, 32), "N5 is", "...", "the", "best\nthere\nis", "...", "especially\nwith", "Kotlin"))
                 .build()
             server.start()
 
