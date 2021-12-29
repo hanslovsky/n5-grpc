@@ -1,0 +1,14 @@
+FROM amazonlinux:2.0.20211005.0
+
+RUN amazon-linux-extras enable corretto8
+RUN yum install -y java-1.8.0-amazon-corretto-devel
+RUN java -version
+
+ENV APPUSER=appuser
+RUN groupadd -g 9001 $APPUSER
+RUN useradd --create-home -g $APPUSER $APPUSER
+USER $APPUSER
+COPY --chown=$APPUSER:$APPUSER n5-grpc-example-server/build/install/n5-grpc-example-server server
+ENV JAVA_HOME=/usr/lib/jvm/java-1.8.0-amazon-corretto.x86_64
+
+ENTRYPOINT server/bin/n5-grpc-example-server

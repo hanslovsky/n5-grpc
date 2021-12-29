@@ -1,0 +1,11 @@
+[Unit]
+Description=N5 Grpc Example Server
+
+[Service]
+User=root
+WorkingDirectory=/home/zottel/workspace/n5-grpc/n5-grpc/n5-grpc-example-server
+ExecStart=/home/zottel/workspace/n5-grpc/n5-grpc/n5-grpc-example-server/build/install/n5-grpc-example-server/bin/n5-grpc-example-server
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
