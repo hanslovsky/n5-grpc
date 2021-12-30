@@ -1,11 +1,10 @@
-package me.hanslovsky.n5.grpc.service
+package org.janelia.saalfeldlab.n5.grpc.service
 
-import com.google.gson.Gson
 import com.google.gson.JsonElement
 import io.grpc.inprocess.InProcessChannelBuilder
 import io.grpc.inprocess.InProcessServerBuilder
-import me.hanslovsky.n5.grpc.N5GrpcReader
-import me.hanslovsky.n5.grpc.defaultGson
+import org.janelia.saalfeldlab.n5.grpc.N5GrpcReader
+import org.janelia.saalfeldlab.n5.grpc.defaultGson
 import org.janelia.saalfeldlab.n5.DataBlock
 import org.janelia.saalfeldlab.n5.DatasetAttributes
 import org.janelia.saalfeldlab.n5.GsonAttributesParser

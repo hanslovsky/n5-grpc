@@ -1,12 +1,11 @@
-package me.hanslovsky.n5.grpc
+package org.janelia.saalfeldlab.n5.grpc
 
 import com.google.gson.GsonBuilder
 import io.grpc.ManagedChannel
 import io.grpc.ManagedChannelBuilder
-import me.hanslovsky.n5.grpc.generated.N5GRPCServiceGrpc
-import me.hanslovsky.n5.grpc.generated.N5Grpc
+import org.janelia.saalfeldlab.n5.grpc.generated.N5GRPCServiceGrpc
+import org.janelia.saalfeldlab.n5.grpc.generated.N5Grpc
 import org.janelia.saalfeldlab.n5.*
-import java.io.ByteArrayInputStream
 import java.lang.reflect.Type
 
 class N5GrpcReader private constructor(

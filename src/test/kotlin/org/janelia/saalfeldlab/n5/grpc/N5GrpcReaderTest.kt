@@ -1,4 +1,4 @@
-package me.hanslovsky.n5.grpc
+package org.janelia.saalfeldlab.n5.grpc
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonPrimitive
@@ -6,10 +6,10 @@ import com.google.gson.reflect.TypeToken
 import io.grpc.StatusRuntimeException
 import io.grpc.inprocess.InProcessChannelBuilder
 import io.grpc.inprocess.InProcessServerBuilder
-import me.hanslovsky.n5.grpc.generated.N5Grpc
+import org.janelia.saalfeldlab.n5.grpc.generated.N5Grpc
 import java.util.UUID
 import kotlin.reflect.full.isSubclassOf
-import me.hanslovsky.n5.grpc.service.N5GrpcServer
+import org.janelia.saalfeldlab.n5.grpc.service.N5GrpcServer
 import org.janelia.saalfeldlab.n5.*
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.Assertions
