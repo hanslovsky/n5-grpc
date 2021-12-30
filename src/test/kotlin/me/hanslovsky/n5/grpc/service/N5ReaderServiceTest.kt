@@ -21,6 +21,10 @@ internal class N5ReaderServiceTest {
     fun testService() {
         val reader = N5GrpcReader(channel)
 
+        Assertions.assertFalse(service.isTerminated)
+        Assertions.assertFalse(channel.isTerminated)
+        Assertions.assertFalse(service.isShutdown)
+        Assertions.assertFalse(channel.isShutdown)
         Assertions.assertFalse(reader.exists(""))
         Assertions.assertFalse(reader.datasetExists(""))
         Assertions.assertArrayEquals(arrayOf(), reader.list(""))
