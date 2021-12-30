@@ -1,10 +1,10 @@
-package me.hanslovsky.n5.grpc
+package org.janelia.saalfeldlab.n5.grpc
 
 import com.google.gson.JsonElement
 import io.grpc.stub.StreamObserver
-import me.hanslovsky.n5.grpc.service.N5ReaderServiceBase
 import org.janelia.saalfeldlab.n5.DataBlock
 import org.janelia.saalfeldlab.n5.DatasetAttributes
+import org.janelia.saalfeldlab.n5.grpc.service.N5ReaderServiceBase
 
 class TestService(
     var readBlock: ((String, DatasetAttributes, LongArray) -> DataBlock<*>?)? = null,

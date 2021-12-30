@@ -1,17 +1,13 @@
-package me.hanslovsky.n5.grpc.service
+package org.janelia.saalfeldlab.n5.grpc.service
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement
-import com.google.protobuf.ByteString
-import com.google.protobuf.NullValue
 import io.grpc.stub.StreamObserver
-import me.hanslovsky.n5.grpc.asDatasetAttributes
-import me.hanslovsky.n5.grpc.asMessage
-import me.hanslovsky.n5.grpc.asNullableMessage
-import me.hanslovsky.n5.grpc.generated.N5GRPCServiceGrpc
-import me.hanslovsky.n5.grpc.generated.N5Grpc
+import org.janelia.saalfeldlab.n5.grpc.asDatasetAttributes
+import org.janelia.saalfeldlab.n5.grpc.asNullableMessage
+import org.janelia.saalfeldlab.n5.grpc.generated.N5GRPCServiceGrpc
+import org.janelia.saalfeldlab.n5.grpc.generated.N5Grpc
 import org.janelia.saalfeldlab.n5.*
-import java.io.ByteArrayOutputStream
 
 abstract class N5ReaderServiceBase(val gson: Gson): N5GRPCServiceGrpc.N5GRPCServiceImplBase() {
 

@@ -1,11 +1,11 @@
-package me.hanslovsky.n5.grpc
+package org.janelia.saalfeldlab.n5.grpc
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.protobuf.ByteString
 import com.google.protobuf.NullValue
 import com.google.protobuf.UnsafeByteOperations
-import me.hanslovsky.n5.grpc.generated.N5Grpc
+import org.janelia.saalfeldlab.n5.grpc.generated.N5Grpc
 import org.janelia.saalfeldlab.n5.*
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream

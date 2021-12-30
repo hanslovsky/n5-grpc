@@ -1,8 +1,8 @@
-package me.hanslovsky.n5.grpc
+package org.janelia.saalfeldlab.n5.grpc
 
 import com.google.gson.JsonElement
 import com.google.protobuf.NullValue
-import me.hanslovsky.n5.grpc.generated.N5Grpc
+import org.janelia.saalfeldlab.n5.grpc.generated.N5Grpc
 import org.janelia.saalfeldlab.n5.*
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

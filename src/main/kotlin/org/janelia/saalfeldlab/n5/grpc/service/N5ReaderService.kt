@@ -1,8 +1,8 @@
-package me.hanslovsky.n5.grpc.service
+package org.janelia.saalfeldlab.n5.grpc.service
 
 import com.google.gson.Gson
 import io.grpc.ServerBuilder
-import me.hanslovsky.n5.grpc.defaultGson
+import org.janelia.saalfeldlab.n5.grpc.defaultGson
 import org.janelia.saalfeldlab.n5.AbstractGsonReader
 import org.janelia.saalfeldlab.n5.DatasetAttributes
 import org.janelia.saalfeldlab.n5.GsonAttributesParser
