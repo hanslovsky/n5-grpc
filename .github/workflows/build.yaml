@@ -11,7 +11,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jdk: [8, 16]
+        # maven-kotlin-plugin has issues with Java 16. Upgrade to kotlin >= 1.5 will fix this, but
+        # pom-scijava still has Kotlin 1.4.
+        # https://youtrack.jetbrains.com/issue/KT-47308
+        jdk: [8] # , 16]
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
@@ -26,5 +29,4 @@ jobs:
           java-version: "${{ matrix.jdk }}"
           distribution: "adopt"
       - name: Build and execute unit tests
-        run: mvn clean package test
-        # run: ./gradlew clean build check jacocoTestCoverageVerification
+        run: ./mvnw clean package test
