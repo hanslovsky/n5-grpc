@@ -7,7 +7,7 @@ Experimental implementation of [`N5Reader`](https://github.com/saalfeldlab/n5) t
 ## Build
 
 ```shell
-mvn clean package
+./mvn clean package
 ```
 
 ## Examples
