@@ -21,7 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.api.extension.ExtensionContext
 
 
-internal class N5GrpcReaderTest {
+class N5GrpcReaderTest {
 
     private val reader = N5GrpcReader(channel)
 
@@ -40,11 +40,7 @@ internal class N5GrpcReaderTest {
 
     @ExtendWith(EnableGetDatasetAttributes::class)
     @Test
-    fun getDatasetAttributesNotADataset() {
-        Assertions.assertThrows(StatusRuntimeException::class.java) {
-            reader.getDatasetAttributes(groupPath) ?: error("Received null attributes.")
-        }
-    }
+    fun getDatasetAttributesNotADataset() = Assertions.assertNull(reader.getDatasetAttributes(groupPath))
 
     @ExtendWith(EnableReadBlock::class, EnableGetDatasetAttributes::class)
     @Test
@@ -120,7 +116,7 @@ internal class N5GrpcReaderTest {
 
     @Test
     fun healthCheckFail() {
-        N5GrpcReader(InProcessChannelBuilder.forName("invalid-name").directExecutor()).use { reader ->
+        N5GrpcReader.AutoCloseableReader(InProcessChannelBuilder.forName("invalid-name").directExecutor()).use { reader ->
             Assertions.assertThrows(StatusRuntimeException::class.java) {
                 reader.healthCheck()
             }
@@ -130,7 +126,7 @@ internal class N5GrpcReaderTest {
     class EnableGetDatasetAttributes : AfterTestExecutionCallback, BeforeTestExecutionCallback {
         override fun beforeTestExecution(context: ExtensionContext?) {
             val attributes = DatasetAttributes(dimensions, blockSize, dataType, compression)
-            testService.getDatasetAttributes = { if (it == datasetPath)  attributes else error("Not a dataset") }
+            testService.getDatasetAttributes = { p -> attributes.takeIf { p == datasetPath } }
         }
 
         override fun afterTestExecution(context: ExtensionContext?) { testService.getDatasetAttributes = null }

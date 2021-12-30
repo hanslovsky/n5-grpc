@@ -105,9 +105,9 @@
 		<!-- NB: Deploy releases to the SciJava Maven repository. -->
 		<releaseProfiles>deploy-to-scijava</releaseProfiles>
 
-                <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
+		<kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
 
-                <grpc.version>1.43.1</grpc.version>
+		<grpc.version>1.43.1</grpc.version>
 	</properties>
 
 	<dependencies>
@@ -139,6 +139,10 @@
 			<artifactId>grpc-stub</artifactId>
 			<version>${grpc.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
 
 		<!-- Test dependencies -->
 		<dependency>
@@ -148,8 +152,18 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-reflect</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -159,11 +173,11 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.jetbrains.kotlin</groupId>
-			<artifactId>kotlin-reflect</artifactId>
-			<scope>test</scope>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
 		</dependency>
 	</dependencies>
+
 	<repositories>
 		<repository>
 			<id>scijava.public</id>

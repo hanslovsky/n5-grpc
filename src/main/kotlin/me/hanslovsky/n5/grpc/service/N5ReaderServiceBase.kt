@@ -17,7 +17,7 @@ abstract class N5ReaderServiceBase(val gson: Gson): N5GRPCServiceGrpc.N5GRPCServ
 
     abstract fun readBlock(path: String, attributes: DatasetAttributes, vararg gridPosition: Long): DataBlock<*>?
     abstract fun getAttributes(path: String): Map<String, JsonElement>
-    abstract fun getDatasetAttributes(path: String): DatasetAttributes
+    abstract fun getDatasetAttributes(path: String): DatasetAttributes?
     abstract fun exists(path: String): Boolean
     abstract fun datasetExists(path: String): Boolean
     abstract fun list(path: String): Array<String>

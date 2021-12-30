@@ -9,7 +9,7 @@ import org.janelia.saalfeldlab.n5.DatasetAttributes
 class TestService(
     var readBlock: ((String, DatasetAttributes, LongArray) -> DataBlock<*>?)? = null,
     var getAttributes: ((String) -> Map<String, JsonElement>)? = null,
-    var getDatasetAttributes: ((String) -> DatasetAttributes)? = null,
+    var getDatasetAttributes: ((String) -> DatasetAttributes?)? = null,
     var exists: ((String) -> Boolean)? = null,
     var list: ((String) -> Array<String>)? = null,
     var datasetExists: ((String) -> Boolean)? = null
