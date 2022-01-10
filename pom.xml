@@ -108,6 +108,8 @@
 		<kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
 
 		<grpc.version>1.43.1</grpc.version>
+
+		<grpc-netty.version>1.42.1</grpc-netty.version>
 	</properties>
 
 	<dependencies>
@@ -175,6 +177,27 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
+		</dependency>
+
+		<!-- Examples dependencies -->
+		<dependency>
+			<groupId>net.imglib2</groupId>
+			<artifactId>imglib2</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>sc.fiji</groupId>
+			<artifactId>bigdataviewer-vistools</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-netty</artifactId>
+			<version>${grpc-netty.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
