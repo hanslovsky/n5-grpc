@@ -1,4 +1,4 @@
-[![Build Status](https://github.com/saalfeldlab/n5-grpc/actions/workflows/build.yaml/badge.svg)](https://github.com/hanslovsky/n5-grpc/actions)
+[![Build Status](https://github.com/saalfeldlab/n5-grpc/actions/workflows/build.yaml/badge.svg)](https://github.com/saalfeldlab/n5-grpc/actions)
 
 # N5 gRPC
 
