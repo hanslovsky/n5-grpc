@@ -71,7 +71,7 @@ class VisualizeWithBdv: Callable<Int> {
             ?.let { data.subList(1, data.size).fold(it) { bdv, (n, rai) -> BdvFunctions.show(rai, n, BdvOptions.options().addTo(bdv)) } }
             ?: error("No datasets provided")
         bdv.converterSetups.forEach { it.setDisplayRange(min, max) }
-        while (bdv.bdvHandle.viewerPanel.isVisible) {
+        while (bdv.bdvHandle.viewerPanel.isShowing) {
             Thread.sleep(10)
         }
         return 0
