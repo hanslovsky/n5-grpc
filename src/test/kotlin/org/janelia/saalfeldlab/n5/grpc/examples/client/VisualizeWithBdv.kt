@@ -87,7 +87,7 @@ class VisualizeWithBdv: Callable<Int> {
 
 
 private fun N5Reader.open(dataset: String, queue: SharedQueue? = null): RandomAccessibleInterval<*> {
-    require(datasetExists(dataset))
+    require(datasetExists(dataset)) {"Dataset $dataset does not exist"}
     val attributes = getDatasetAttributes(dataset)
     val rai = when (attributes.dataType) {
         DataType.INT8 -> N5Utils.openVolatile<ByteType>(this, dataset)
