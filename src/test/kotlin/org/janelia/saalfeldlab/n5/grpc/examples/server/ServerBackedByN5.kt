@@ -53,6 +53,6 @@ class ServerBackedByN5: Callable<Int> {
 
         private fun Map<String, *>.toJsonString(gson: Gson) = gson.toJson(this)
 
-        const private val defaultPort = "9090"
+        private const val defaultPort = "9090"
     }
 }
