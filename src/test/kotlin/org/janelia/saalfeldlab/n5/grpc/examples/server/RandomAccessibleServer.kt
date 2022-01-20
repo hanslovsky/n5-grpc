@@ -185,7 +185,7 @@ class RandomAccessibleServer(serverBuilder: ServerBuilder<*>, vararg datasets: P
         val currentCount get() = super.count
     }
 
-    @CommandLine.Command(name="VisualizeWithBdv", showDefaultValues = true)
+    @CommandLine.Command(name="RandomAccessibleServer", showDefaultValues = true)
     class Main: Callable<Int> {
         @CommandLine.Option(names = ["--port", "-p"], required = false, defaultValue = "9090")
         var port: Int = 9090
