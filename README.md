@@ -61,3 +61,21 @@ Then, visualize the `volumes/raw` dataset with an appropriate grayscale range:
 ```
 VisualizeWithBdv -d volumes/raw -M 255
 ```
+
+### Serve Arbitrary `RandomAccessible` as N5 via gRPC
+The [`RandomAccessible`](https://github.com/imglib/imglib2/blob/master/src/main/java/net/imglib2/RandomAccessible.java)
+is a core interface of [ImgLib2](https://imagej.net/libs/imglib2/).
+It models a function that maps points from an n-dimensional integer-value domain to arbitrary outputs.
+In most use cases, the outputs will be real (or complex) scalar values that can be serialized to N5.
+The [`RandomAccessibleServer`](src/test/kotlin/org/janelia/saalfeldlab/n5/grpc/examples/server/RandomAccessibleServer.kt)
+provides an example for serving arbitrary `RandomAccessible`s via N5 gRPC.
+This particular example uses a function that evaluates to the sum of the coordinates of a query point
+but could be equally used for a real use case.
+The main challenge is serialization of blocks of the `RandomAccessible` into binary data for responses to gRPC requests.
+The `N5CallbackWriter` is a helper class that is passed to `N5Utils.save` to re-use existing utility without re-writing serialization of `RandomAccessible`s.
+
+To start the server, run `RandomAccessibleServer` without any arguments.
+The example dataset is then exposed at `my/dataset`. Visualize with an appropriate contrast range:
+```
+VisualizeWithBdv -d my/dataset -M 16384
+```
