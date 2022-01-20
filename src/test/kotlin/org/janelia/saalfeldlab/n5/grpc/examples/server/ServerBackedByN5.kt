@@ -51,8 +51,6 @@ class ServerBackedByN5: Callable<Int> {
             CommandLine(ServerBackedByN5()).execute(*args)
         }
 
-        private fun Map<String, *>.toJsonString(gson: Gson) = gson.toJson(this)
-
         private const val defaultPort = "9090"
     }
 }
