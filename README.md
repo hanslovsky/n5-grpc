@@ -40,8 +40,24 @@ The main class does not expect any arguments.
 The server can be stopped by pressing `ctrl-C` twice.
 
  1. Start the server via `RasterizedTextServer` class
- 2. Visualize the `uint8` dataset with the `RasterizedTextServer` class:
+ 2. Visualize the `uint8` dataset with the `VisualizeWithBdv` class:
     ```
-    RasterizedTextServer -d uint8 -M 128
+    VisualizeWithBdv -d uint8 -M 128
     ```
  3. Read the text snippet (a true literary masterpiece) in BigDatViewer
+
+### Serve HDF5 File as N5 via gRPC
+[`ServerBackedByN5`](src/test/kotlin/org/janelia/saalfeldlab/n5/grpc/examples/server/ServerBackedByN5.kt)
+delegates to a `N5HDF5Reader` and serves a HDF5 file as N5 via gRPC.
+To start a server, provide an HDF5 file as an argument:
+```
+ServerBackedByN5 -f /path/to/file.hdf
+```
+For example, to serve [sample A from the CREMI challenge](https://cremi.org/static/data/sample_A_padded_20160501.hdf), start the server with
+```
+ServerBackedByN5 -f /path/to/sample_A_20160501.hdf
+```
+Then, visualize the `volumes/raw` dataset with an appropriate grayscale range:
+```
+VisualizeWithBdv -d volumes/raw -M 255
+```
