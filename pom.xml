@@ -11,7 +11,7 @@
 
 	<groupId>org.janelia.saalfeldlab</groupId>
 	<artifactId>n5-grpc</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 
 	<name>N5 gRPC</name>
 	<description>gRPC implementation of the N5 interface</description>
